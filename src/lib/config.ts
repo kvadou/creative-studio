@@ -13,8 +13,8 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
 
   // Auth
-  googleClientId: process.env.GOOGLE_CLIENT_ID!,
-  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
   googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3001/api/auth/callback',
   jwtSecret: process.env.JWT_SECRET!,
   allowedEmailDomains: process.env.ALLOWED_EMAIL_DOMAINS
@@ -60,10 +60,9 @@ export const config = {
 // Validate required config
 const requiredEnvVars = [
   'DATABASE_URL',
-  'GOOGLE_CLIENT_ID',
-  'GOOGLE_CLIENT_SECRET',
   'JWT_SECRET',
-  // OPENAI_API_KEY and ANTHROPIC_API_KEY are optional — AI features gracefully degrade
+  // GOOGLE_CLIENT_ID/SECRET optional — auth features degrade gracefully
+  // OPENAI_API_KEY and ANTHROPIC_API_KEY optional — AI features gracefully degrade
 ];
 
 export function validateConfig(): void {
