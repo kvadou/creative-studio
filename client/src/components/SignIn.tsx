@@ -6,11 +6,23 @@ export function SignIn() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <img
-            src="/logo.png"
-            alt="Acme Creative"
-            className="h-16 mx-auto mb-4"
-          />
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <svg
+              className="h-10 w-10"
+              viewBox="0 0 40 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect width="40" height="40" rx="10" fill="#60a5fa" />
+              <path
+                d="M12 28V12h4l4 10 4-10h4v16h-3V17l-3.5 9h-3L15 17v11h-3z"
+                fill="white"
+              />
+            </svg>
+            <span className="text-3xl font-bold" style={{ color: '#60a5fa' }}>
+              Creative Studio
+            </span>
+          </div>
           <h1 className="text-2xl font-bold text-neutral-900">
             Curriculum Assistant
           </h1>
