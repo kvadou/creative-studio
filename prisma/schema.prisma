@@ -1,0 +1,1195 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+model Module {
+  id        String   @id @default(cuid())
+  code      String   @unique // "1A-3-4yo", "2", "4B"
+  title     String
+  ageGroup  String?  // "3-4yo", "4-6yo", null for standard
+  term      String?  // "Term 1&3", "Term 2&4"
+  sequence  Int      // Sort order
+  lessons   Lesson[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lesson {
+  id              String            @id @default(cuid())
+  moduleId        String
+  module          Module            @relation(fields: [moduleId], references: [id])
+  lessonNumber    Int
+  title           String
+  chessConceptKey String?           // "check-cpr", "fork", "knight-movement"
+  filePath        String            @unique
+  rawContent      String
+
+  chunks          Chunk[]
+  characters      LessonCharacter[]
+  mnemonics       LessonMnemonic[]
+  illustrations   Illustration[]
+  audioScripts    AudioScript[]
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@unique([moduleId, lessonNumber])
+  @@index([chessConceptKey])
+}
+
+model Chunk {
+  id           String                       @id @default(cuid())
+  lessonId     String
+  lesson       Lesson                       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  chunkType    ChunkType
+  sectionTitle String?
+  content      String
+  contentHash  String
+  tokenCount   Int
+  sequence     Int
+
+  embedding    Unsupported("vector(768)")?
+
+  createdAt    DateTime                     @default(now())
+
+  @@index([lessonId])
+  @@index([chunkType])
+}
+
+enum ChunkType {
+  LESSON_OVERVIEW
+  STORY
+  CHESS_LESSON
+  TEACHER_TIPS
+  MNEMONIC
+  CHESSERCISE
+  DEVELOPMENTAL
+  INTERACTIVE_MOMENT
+}
+
+model Character {
+  id              String            @id @default(cuid())
+  name            String            @unique
+  piece           String?
+  trait           String?
+  movementNote    String?
+  firstAppearance String?
+  bio             String?           // AI-generated or manually edited character bio
+
+  // Profile photos — references to Illustration records
+  avatarIllustrationId  String?
+  avatarIllustration    Illustration?  @relation("CharacterAvatar", fields: [avatarIllustrationId], references: [id])
+  avatarPosition        String?        // CSS position+scale e.g. "50% 30% 1.5"
+  coverIllustrationId   String?
+  coverIllustration     Illustration?  @relation("CharacterCover", fields: [coverIllustrationId], references: [id])
+  coverPosition         String?        // CSS position+scale e.g. "50% 30% 1.5"
+  profileIllustrationId String?
+  profileIllustration   Illustration?  @relation("CharacterProfile", fields: [profileIllustrationId], references: [id])
+  profilePosition       String?        // CSS position+scale e.g. "50% 50% 1"
+
+  lessons              LessonCharacter[]
+  illustrations        Illustration[]
+  illustrationTags     IllustrationCharacter[]
+
+  createdAt       DateTime          @default(now())
+
+  @@index([avatarIllustrationId])
+  @@index([coverIllustrationId])
+  @@index([profileIllustrationId])
+}
+
+model LessonCharacter {
+  lessonId    String
+  characterId String
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  character   Character @relation(fields: [characterId], references: [id])
+
+  @@id([lessonId, characterId])
+}
+
+model Mnemonic {
+  id        String           @id @default(cuid())
+  phrase    String           @unique
+  concept   String
+  canonical Boolean          @default(true)
+
+  lessons   LessonMnemonic[]
+
+  createdAt DateTime         @default(now())
+}
+
+model LessonMnemonic {
+  lessonId   String
+  mnemonicId String
+  lesson     Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  mnemonic   Mnemonic @relation(fields: [mnemonicId], references: [id])
+
+  @@id([lessonId, mnemonicId])
+}
+
+// Many-to-many: which characters appear in each illustration
+model IllustrationCharacter {
+  illustrationId String
+  characterId    String
+  illustration   Illustration @relation(fields: [illustrationId], references: [id], onDelete: Cascade)
+  character      Character    @relation(fields: [characterId], references: [id])
+
+  @@id([illustrationId, characterId])
+  @@index([characterId])
+}
+
+model QueryLog {
+  id              String   @id @default(cuid())
+  query           String
+  retrievedChunks Json
+  response        String?
+  confidenceScore Float?
+  answeredFromKB  Boolean
+  feedbackScore   Int?
+
+  createdAt       DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([answeredFromKB])
+}
+
+model IngestionRun {
+  id                String   @id @default(cuid())
+  filesProcessed    Int
+  chunksCreated     Int
+  embeddingsCreated Int
+  errors            Json?
+  duration          Int
+
+  createdAt         DateTime @default(now())
+}
+
+// Cultural adaptation profiles for international markets
+model CulturalProfile {
+  id          String   @id @default(cuid())
+  region      String   @unique // "singapore", "hong_kong", "uae"
+  displayName String // "Singapore", "Hong Kong", "United Arab Emirates"
+
+  // Structured guidance (stored as JSON arrays)
+  guidelines   Json // [{ category, guidance, importance }]
+  restrictions Json // [{ type, description, severity }]
+  adaptations  Json // [{ original, adapted, reason }]
+
+  // Reference information
+  sources String[] // URLs and document references
+  notes   String? // Free-form notes from local experts
+
+  // Review workflow
+  generatedAt DateTime  @default(now())
+  reviewedAt  DateTime?
+  reviewedBy  String? // Email of reviewer
+  version     Int       @default(1)
+  isActive    Boolean   @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+// ============================================
+// Conversation Persistence (ChatGPT-style)
+// ============================================
+
+enum ProjectRole {
+  OWNER
+  EDITOR
+}
+
+model Project {
+  id            String          @id @default(cuid())
+  userId        String          // Original owner (Google OAuth ID)
+  name          String
+  color         String?         // Optional hex color for UI
+  instructions  String?         // Shared instructions for all chats in project
+  conversations Conversation[]
+  members       ProjectMember[]
+  templates     LessonTemplate[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model ProjectMember {
+  id        String      @id @default(cuid())
+  projectId String
+  project   Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String      // Google OAuth ID
+  email     String      // Stored for display
+  role      ProjectRole @default(EDITOR)
+  invitedBy String?     // userId of who invited them
+  invitedAt DateTime    @default(now())
+
+  @@unique([projectId, userId])
+  @@index([userId])
+  @@index([projectId])
+}
+
+model Conversation {
+  id        String                @id @default(cuid())
+  userId    String                // Google OAuth ID
+  title     String                // Auto-generated from first message
+  projectId String?
+  project   Project?              @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  messages  ConversationMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, updatedAt(sort: Desc)])
+  @@index([projectId])
+}
+
+model ConversationMessage {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  role     String // "user" | "assistant"
+  content  String
+  metadata Json?  // { citations, confidence, queryId, agenticMode, region, culturalSources }
+
+  sequence Int // Order within conversation (0, 1, 2...)
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId, sequence])
+}
+
+// ============================================
+// Curriculum Generation Engine
+// ============================================
+
+enum AgeBand {
+  THREE_TO_SEVEN
+  EIGHT_TO_NINE
+  TEN_TO_TWELVE
+}
+
+enum StoryDensity {
+  HIGH   // Story-first, longer narratives
+  MEDIUM // Balanced story and chess
+  LOW    // Chess-first, anecdotal stories only
+}
+
+enum StorySubject {
+  FICTIONAL_CHARACTERS // Use Acme Creative canonical characters
+  REAL_CHESS_FIGURES   // Feature real chess players/history
+  MIXED                // Combine both fictional and real
+}
+
+enum ChessBasis {
+  PLAYER_TEACHINGS // Based on famous player's teachings
+  BOOK_REFERENCE   // Reference from chess books
+  OPENING_SYSTEM   // Based on opening systems
+  TACTICAL_THEME   // Built around tactical patterns
+}
+
+enum PuzzleDifficulty {
+  EASY   // 1-move solutions
+  MEDIUM // 2-move solutions
+  HARD   // 3+ move solutions
+  MIXED  // Progressive difficulty
+}
+
+enum GenerationStatus {
+  // Job processing states
+  QUEUED     // Job created, waiting to process
+  GENERATING // AI is generating the lesson
+  REVIEWING  // AI review in progress
+  FAILED     // Generation failed
+  // Workflow states
+  DRAFT
+  REVIEWED
+  APPROVED
+  REJECTED
+}
+
+// Batch generation status (Phase 3)
+enum BatchStatus {
+  PENDING            // Not yet started
+  PROCESSING         // Currently generating lessons
+  COMPLETED          // All lessons generated successfully
+  FAILED             // Generation failed completely
+  PARTIALLY_COMPLETED // Some lessons succeeded, some failed
+}
+
+model GeneratedLesson {
+  id String @id @default(cuid())
+
+  // Generation parameters
+  ageBand            AgeBand
+  chessConceptKey    String  // e.g., "forks", "pins", "castling"
+  storyDensity       StoryDensity
+
+  // Structured inputs (Phase 2)
+  storySubject       StorySubject?     // Who the story is about
+  chessBasis         ChessBasis?       // What chess is based on
+  puzzleCount        Int?              // Number of puzzles (1-10)
+  puzzleDifficulty   PuzzleDifficulty? // Puzzle difficulty level
+  additionalNotes    String?           // Optional extra notes (replaces customInstructions for new lessons)
+  customInstructions String?           // Legacy: User's custom instructions for generation
+
+  // Reference data based on chessBasis
+  playerName         String?           // For PLAYER_TEACHINGS: player name
+  playerProfile      Json?             // For PLAYER_TEACHINGS: full Lichess profile data
+  bookId             String?           // For BOOK_REFERENCE: book ID
+  bookTitle          String?           // For BOOK_REFERENCE: book title
+  openingEco         String?           // For OPENING_SYSTEM: ECO code
+  openingName        String?           // For OPENING_SYSTEM: opening name
+  tacticalThemeId    String?           // For TACTICAL_THEME: theme ID
+  tacticalThemeName  String?           // For TACTICAL_THEME: theme name
+
+  // Generated content (nullable until generation completes)
+  title      String?
+  rawContent String? // Full markdown lesson
+
+  // Extracted sections (for validation)
+  storyContent String?
+  chessLesson  String?
+  teacherTips  String?
+  chessercises String?
+  puzzles      Json? // Array of { fen, narrative, answer }
+
+  // Source attribution (Phase 4)
+  sourceAttributions Json? // Array of { content, type, source, confidence }
+
+  // Validation
+  aiReviewScore      Float?
+  aiReviewNotes      String?
+  comparisonLessonId String? // ID of similar existing lesson for side-by-side
+  checklistCompleted Boolean @default(false)
+  checklistItems     Json?   // { storyPresent: true, ... }
+
+  // Job processing
+  status       GenerationStatus @default(QUEUED)
+  errorMessage String?          // Error details if FAILED
+
+  // Metadata
+  createdByEmail String   // Google OAuth email
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  iterations GenerationIteration[]
+
+  // Batch relation (Phase 3)
+  batchId        String?
+  batch          CurriculumBatch? @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  batchSequence  Int?             // Order within the batch (1, 2, 3...)
+
+  // A/B Generation (Phase 4)
+  abGroupId      String?          // Shared ID grouping A/B/C variants together
+  abVariant      String?          // "A", "B", or "C"
+  wasSelected    Boolean          @default(false) // True if user selected this version
+
+  @@index([createdByEmail])
+  @@index([status])
+  @@index([chessConceptKey])
+  @@index([batchId])
+  @@index([abGroupId])
+}
+
+model GenerationIteration {
+  id       String @id @default(cuid())
+  lessonId String
+  lesson   GeneratedLesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  prompt          String // User's refinement request
+  previousContent String // Content before this iteration
+  newContent      String // Content after this iteration
+
+  createdAt DateTime @default(now())
+
+  @@index([lessonId])
+}
+
+// Multi-lesson batch generation (Phase 3)
+model CurriculumBatch {
+  id            String      @id @default(cuid())
+  name          String      // User-provided name, e.g., "Forks and Pins Progression"
+  ageBand       AgeBand
+  storyDensity  StoryDensity
+  lessonCount   Int         // Target number of lessons (max 5)
+
+  // Progression context: JSON array of { lessonNum, concept, description? }
+  progression   Json
+
+  // Status tracking
+  status            BatchStatus @default(PENDING)
+  currentLesson     Int         @default(0)    // Which lesson is currently being generated (0 = not started)
+  completedLessons  Int         @default(0)    // How many lessons have completed
+  failedLessons     Int         @default(0)    // How many lessons failed
+  errorMessage      String?                    // Overall error if status is FAILED
+
+  // Generated lessons
+  lessons       GeneratedLesson[]
+
+  // Metadata
+  createdByEmail String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([createdByEmail])
+  @@index([status])
+}
+
+// Lesson generation templates
+enum TemplateType {
+  PERSONAL  // User's private template
+  TEAM      // Shared within a project
+  BUILTIN   // System-provided starter templates
+}
+
+model LessonTemplate {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+
+  type        TemplateType
+
+  // Ownership (PERSONAL = createdByEmail, TEAM = projectId, BUILTIN = neither)
+  createdByEmail String?
+  projectId      String?
+  project        Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // Configuration (stores all GeneratorForm fields as JSON)
+  // { ageBand, storyDensity, storySubject, chessBasis, puzzleCount, puzzleDifficulty, additionalNotes, ...referenceData }
+  config      Json
+
+  // Metadata
+  usageCount  Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([createdByEmail])
+  @@index([projectId])
+  @@index([type])
+}
+
+// ============================================
+// Illustrations Module
+// ============================================
+
+enum IllustrationStatus {
+  UPLOADING    // Source photo being uploaded
+  GENERATING   // Flux model processing
+  COMPLETED    // Generation successful
+  FAILED       // Generation failed
+}
+
+enum ArtType {
+  CARTOON    // Employee cartoon (Flux LoRA)
+  CHARACTER  // Production character art (Gemini)
+  VIDEO      // Animated video (Veo)
+  ORIGINAL   // Source illustration from Acme Creative library
+  BACKGROUND // Chesslandia background/environment (no characters)
+}
+
+model Illustration {
+  id          String   @id @default(cuid())
+  name        String   // Character name (e.g., "Emily Smales")
+  description String?  // User-editable description
+
+  // Art type discriminator
+  artType     ArtType  @default(CARTOON)
+
+  // Source photo (uploaded by user — for CARTOON type)
+  sourcePhotoUrl  String?  // S3 URL of original photo
+  sourcePhotoKey  String?  // S3 key for cleanup
+
+  // Generated illustration
+  illustrationUrl  String?  // S3 URL of final illustration
+  illustrationKey  String?  // S3 key
+
+  // Video fields (artType: VIDEO)
+  sourceIllustrationId  String?       // links video → source character art
+  sourceIllustration    Illustration? @relation("VideoSource", fields: [sourceIllustrationId], references: [id])
+  derivedVideos         Illustration[] @relation("VideoSource")
+  duration              Int?          // 4, 6, or 8 seconds
+  aspectRatio           String?       // "16:9" or "9:16"
+  videoUrl              String?       // S3 URL for video file
+  videoKey              String?       // S3 key for cleanup
+  thumbnailUrl          String?       // first-frame thumbnail
+  thumbnailKey          String?       // S3 key for thumbnail
+
+  // Generation metadata
+  status       IllustrationStatus @default(UPLOADING)
+  replicateId  String?   // Replicate prediction ID (CARTOON)
+  geminiRequestId String? // Gemini request ID (CHARACTER)
+  errorMessage String?
+
+  // Who created it
+  createdByEmail String
+
+  // Is this an original (pre-AI) illustration?
+  isOriginal   Boolean  @default(false)
+
+  // Gold standard reference for AI generation
+  isGoldStandard     Boolean  @default(false)
+  goldStandardType   String?  // "REFERENCE" or "TPOSE"
+
+  // Reference control — when false, excluded from AI search/generation
+  isReferenceEnabled Boolean  @default(true)
+
+  // Scene metadata (parsed from filename)
+  storyTitle       String?  // e.g., "Queens", "King Chomper", "Chess is a Sea"
+  pictureNumber    Int?     // e.g., 5 (from "Queens 5.jpg")
+
+  // Character link (optional — not all illustrations are of characters)
+  characterId  String?
+  character    Character?  @relation(fields: [characterId], references: [id])
+
+  // Reverse relations for character avatar/cover/profile photos
+  avatarForCharacters  Character[] @relation("CharacterAvatar")
+  coverForCharacters   Character[] @relation("CharacterCover")
+  profileForCharacters Character[] @relation("CharacterProfile")
+
+  // Curriculum link — optional tag to a specific lesson
+  lessonId     String?
+  lesson       Lesson?  @relation(fields: [lessonId], references: [id])
+
+  // AI description + embedding (Feed Lagroovy)
+  aiDescription    String?                          // Gemini Flash visual description
+  sourceFilePath   String?    @unique               // Original path in media/ (dedup key)
+  embedding        Unsupported("vector(768)")?      // Gemini Embedding 2 vector
+  embeddedAt       DateTime?                        // When last embedded
+  reviewStatus     String?                          // "described" | "reviewed" | "trained"
+
+  generations      IllustrationGeneration[]
+  messages         IllustrationMessage[]
+  characterTags    IllustrationCharacter[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([createdByEmail])
+  @@index([status])
+  @@index([name])
+  @@index([artType])
+  @@index([characterId])
+  @@index([sourceIllustrationId])
+  @@index([lessonId])
+  @@index([isGoldStandard])
+}
+
+model IllustrationGeneration {
+  id              String       @id @default(cuid())
+  illustrationId  String
+  illustration    Illustration @relation(fields: [illustrationId], references: [id], onDelete: Cascade)
+
+  // Provider: which AI service generated this
+  provider        String   @default("REPLICATE") // "REPLICATE" | "GEMINI"
+
+  // Replicate prediction details (for CARTOON/Replicate)
+  replicateId     String?
+  inputPhotoUrl   String?  // S3 URL of input photo
+  outputImageUrl  String?  // Replicate output URL (temporary)
+  savedImageUrl   String?  // S3 URL (permanent)
+  savedImageKey   String?  // S3 key
+
+  // Generation params (for reproducibility)
+  prompt          String?
+  modelVersion    String?
+
+  // Character art specific
+  resolution      Int?     // 1024, 2048, or 4096
+  referenceIds    Json?    // Array of StyleReference IDs used
+  pipelineLog     Json?    // {styleBible, autoSearchQuery, autoSearchResults, refsLoaded, refsAttempted}
+
+  // Result
+  selected        Boolean  @default(false) // User picked this variant
+
+  createdAt       DateTime @default(now())
+
+  @@index([illustrationId])
+}
+
+model IllustrationMessage {
+  id              String       @id @default(cuid())
+  illustrationId  String
+  illustration    Illustration @relation(fields: [illustrationId], references: [id], onDelete: Cascade)
+
+  role            String       // 'user' | 'assistant'
+  content         String       // Message text
+  metadata        Json?        // Suggested prompt, loraScale, guidanceScale, etc.
+
+  createdAt       DateTime     @default(now())
+
+  @@index([illustrationId])
+}
+
+model StyleModel {
+  id           String   @id @default(cuid())
+  name         String   // e.g., "Acme Creative Character Style v1"
+
+  // Replicate model info
+  replicateModelId  String   // e.g., "acmecreative/character-style"
+  modelVersion      String   // Specific version hash
+
+  // Training metadata
+  trainingPairs  Int      // Number of image pairs used
+  isActive       Boolean  @default(true)  // Currently used for generation
+
+  createdByEmail String
+  createdAt      DateTime @default(now())
+
+  @@index([isActive])
+}
+
+// ============================================
+// Character Art Pipeline (Gemini)
+// ============================================
+
+// ============================================
+// Audio Module — Character Voices
+// ============================================
+
+enum AudioLineStatus {
+  PENDING      // Queued for generation
+  GENERATING   // ElevenLabs processing
+  COMPLETED    // Audio file ready
+  FAILED       // Generation failed
+}
+
+model CharacterVoice {
+  id              String   @id @default(cuid())
+  name            String   // "King Chomper", "Queen Bella"
+  description     String   // Voice description prompt sent to ElevenLabs
+  voiceId         String?  // ElevenLabs voice_id (set after saving a preview)
+  sampleUrl       String?  // S3 URL of the voice sample audio
+  sampleKey       String?  // S3 key for cleanup
+  character       String?  // Acme Creative character name link (free text for now)
+
+  createdByEmail  String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  scripts         AudioScript[]
+  lines           AudioLine[]
+
+  @@index([name])
+  @@index([character])
+  @@index([createdByEmail])
+}
+
+model VoicePreview {
+  id               String   @id @default(cuid())
+  voiceDescription String   // The prompt used to generate
+  generatedVoiceId String   // ElevenLabs generated_voice_id (temporary)
+  audioUrl         String?  // S3 URL of preview audio
+  audioKey         String?  // S3 key
+  durationSecs     Float?   // Duration of preview audio
+
+  createdByEmail   String
+  createdAt        DateTime @default(now())
+
+  @@index([createdByEmail])
+}
+
+model AudioScript {
+  id              String   @id @default(cuid())
+  name            String   // "Lesson 1 Opening Narration"
+  characterVoiceId String
+  characterVoice  CharacterVoice @relation(fields: [characterVoiceId], references: [id], onDelete: Cascade)
+
+  // Optional curriculum link
+  lessonId        String?
+  lesson          Lesson?  @relation(fields: [lessonId], references: [id])
+
+  // Stitched audio (all lines concatenated)
+  stitchedUrl       String?  // S3 URL of stitched audio file
+  stitchedKey       String?  // S3 key for cleanup
+  stitchedDurationSecs Float? // Total duration in seconds
+
+  createdByEmail  String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  lines           AudioLine[]
+
+  @@index([characterVoiceId])
+  @@index([lessonId])
+}
+
+model AudioLine {
+  id              String          @id @default(cuid())
+  scriptId        String
+  script          AudioScript     @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  characterVoiceId String
+  characterVoice  CharacterVoice  @relation(fields: [characterVoiceId], references: [id])
+
+  text            String          // The dialogue text
+  emotion         String          @default("neutral") // neutral, excited, dramatic, gentle, teaching
+  sequence        Int             // Order within the script
+
+  // Generation
+  status          AudioLineStatus @default(PENDING)
+  audioUrl        String?         // S3 URL of generated audio
+  audioKey        String?         // S3 key
+  durationSecs    Float?          // Duration in seconds
+  errorMessage    String?
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([scriptId])
+  @@index([characterVoiceId])
+  @@index([status])
+}
+
+// ============================================
+// User Management
+// ============================================
+
+// ============================================
+// Daily Content Suggestions (AI-powered feed)
+// ============================================
+
+enum SuggestionStatus {
+  SUGGESTED   // AI generated, waiting for team
+  USED        // Team posted this content
+  SKIPPED     // Team skipped with reason
+}
+
+model DailySuggestion {
+  id                  String           @id @default(cuid())
+  date                DateTime         @db.Date
+  sequence            Int              // 1-5, order within the day
+  title               String           // "International Day of Mathematics"
+  occasion            String?          // Holiday/event name
+
+  // Primary content
+  persona             String           // PARENT, SCHOOL, FRANCHISE, etc.
+  caption             String           // Facebook/Instagram version
+  captionTikTok       String?          // Short version
+  captionLinkedIn     String?          // Professional version
+  hashtags            String[]         // Array of hashtags
+  brief               String           // Why this content works
+  targetAudience      String?          // "Parents of 3-5 year olds"
+
+  // Alt persona
+  altPersona          String?
+  altCaption          String?
+
+  // Platform recommendations
+  recommendedPlatforms String[]        // ["instagram", "facebook", "tiktok"]
+
+  // Matched assets from our library
+  matchedAssetIds     String[]         // illustration/video IDs
+
+  // AI generation prompts for missing assets
+  generationPrompts   Json?            // [{prompt, character, style}]
+
+  // Chess news tie-in
+  chessNewsHeadline   String?
+  chessNewsTieIn      String?
+
+  // Characters featured
+  characterNames      String[]
+
+  // Tracking
+  status              SuggestionStatus @default(SUGGESTED)
+  usedAt              DateTime?
+  usedByEmail         String?
+  skipReason          String?
+
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  @@unique([date, sequence])
+  @@index([date])
+  @@index([status])
+  @@index([persona])
+}
+
+// ============================================
+// System Configuration (key-value store)
+// ============================================
+
+model SystemConfig {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+  updatedBy String?  // email of last editor
+}
+
+// ============================================
+// Chess News (Lichess, Chess.com, FIDE feeds)
+// ============================================
+
+enum ChessNewsSource {
+  LICHESS
+  CHESSCOM
+  FIDE
+}
+
+model ChessNewsItem {
+  id             String          @id @default(cuid())
+  source         ChessNewsSource
+  externalId     String          // Source-specific ID for dedup
+  title          String
+  summary        String?         // AI-generated summary
+  url            String          // Link to original
+  imageUrl       String?
+  category       String?         // "tournament", "puzzle", "player", "education"
+  playerNames    String[]        // Chess players mentioned
+  characterTieIn String?         // Which Acme Creative character this maps to
+  publishedAt    DateTime
+  fetchedAt      DateTime        @default(now())
+
+  @@unique([source, externalId])
+  @@index([publishedAt])
+  @@index([category])
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  picture     String?
+  role        UserRole @default(MEMBER)
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([email])
+  @@index([role])
+}
+
+// ============================================
+// UGC Marketing Engine
+// ============================================
+
+// Winning patterns extracted from OpsHub paid ads data
+model MarketingInsight {
+  id              String   @id @default(cuid())
+  extractedAt     DateTime @default(now())
+
+  // Source campaign data from OpsHub
+  campaignName    String
+  platform        String   // 'meta' | 'google'
+  utmCampaign     String?
+
+  // Performance metrics (from OpsHub)
+  spend           Float
+  leads           Int
+  registrations   Int
+  realizedRevenue Float
+  roas            Float
+  cpl             Float    // cost per lead
+  cpr             Float    // cost per registration
+
+  // Extracted intelligence (Claude-analyzed)
+  hookTheme       String   // e.g. "academic struggle → chess confidence"
+  audienceSignal  String   // e.g. "parents of 6-10 year olds, school performance concerns"
+  messagingAngle  String   // e.g. "chess as brain training, not just a game"
+  proofPoints     String[] // e.g. ["focus improvement", "math scores", "confidence"]
+  avoidPatterns   String[] // patterns from low performers
+
+  // Ranking
+  insightScore    Float    // composite score: roas * conversion_rate
+  isActive        Boolean  @default(true)
+
+  scripts         MarketingScript[]
+
+  @@index([platform])
+  @@index([insightScore])
+  @@index([extractedAt])
+}
+
+// Generated TikTok scripts
+model MarketingScript {
+  id              String              @id @default(cuid())
+  createdAt       DateTime            @default(now())
+
+  // Generation context
+  insightId       String?
+  insight         MarketingInsight?   @relation(fields: [insightId], references: [id])
+  persona         ScriptPersona
+  format          ScriptFormat
+  lineOfBusiness  String              @default("tutoring")
+
+  // Script content
+  hook            String              // First 3 seconds
+  body            String              // Core story/value
+  cta             String              // Call to action
+  hashtags        String[]
+  textOverlaySuggestion String?       // Bold text overlay for first 3 seconds (TikTok SEO)
+
+  // Filming direction (for creator brief)
+  settingSuggestion String?           // e.g. "kitchen table, morning light"
+  propsSuggestion   String?           // e.g. "chess board in background"
+  toneSuggestion    String?           // e.g. "tired-but-proud mom energy"
+  durationTarget    Int               // seconds
+
+  // Workflow
+  status          ScriptStatus        @default(PENDING_REVIEW)
+  approvedAt      DateTime?
+  skippedAt       DateTime?
+  skippedReason   String?
+
+  briefs          ContentBrief[]
+
+  @@index([status])
+  @@index([persona])
+  @@index([createdAt])
+}
+
+enum ScriptPersona {
+  CONVERTED_PARENT      // My kid was struggling, now thriving
+  SKEPTICAL_PARENT      // I didn't think chess could...
+  COMPARISON_PARENT     // We tried everything, this is different
+}
+
+enum ScriptFormat {
+  HOOK_PROBLEM_PROOF_CTA   // 50-75s
+  BEFORE_AFTER             // 40-60s
+  STORY_ARC                // 60-90s
+}
+
+enum ScriptStatus {
+  PENDING_REVIEW
+  APPROVED
+  SKIPPED
+  BRIEFED      // brief generated and sent to creator
+  FILMED       // video received
+  POSTED       // live on TikTok
+}
+
+// UGC creators in the roster
+model UGCCreator {
+  id              String        @id @default(cuid())
+  createdAt       DateTime      @default(now())
+
+  name            String
+  tiktokHandle    String        @unique
+  email           String?
+  paymentEmail    String?       // Venmo/PayPal
+  ratePerVideo    Float         @default(17.50)
+  promoCode       String?       // e.g. "SARAH10" — tracks sales regardless of UTM
+
+  // Qualification
+  followerCount   Int?
+  avgViewCount    Int?          // estimated
+  audienceType    String?       // e.g. "moms 28-40, US"
+  hasKids         Boolean       @default(true)
+
+  status          CreatorStatus @default(ACTIVE)
+  notes           String?
+
+  briefs          ContentBrief[]
+  videos          UGCVideo[]
+
+  @@index([status])
+}
+
+enum CreatorStatus {
+  OUTREACH      // contacted, no response yet
+  ACTIVE        // working with us
+  PAUSED        // temporarily paused
+  CHURNED       // no longer working with us
+}
+
+// Creator briefs generated from approved scripts
+model ContentBrief {
+  id              String         @id @default(cuid())
+  createdAt       DateTime       @default(now())
+
+  scriptId        String
+  script          MarketingScript @relation(fields: [scriptId], references: [id])
+
+  creatorId       String?
+  creator         UGCCreator?    @relation(fields: [creatorId], references: [id])
+
+  // Brief content
+  briefHtml       String         // Full formatted brief
+  canvaDesignUrl  String?        // Canva design link
+
+  // Delivery
+  sentAt          DateTime?
+  dueDate         DateTime?
+
+  videos          UGCVideo[]
+
+  @@index([scriptId])
+  @@index([creatorId])
+}
+
+// UGC videos submitted by creators
+model UGCVideo {
+  id              String        @id @default(cuid())
+  createdAt       DateTime      @default(now())
+
+  briefId         String
+  brief           ContentBrief  @relation(fields: [briefId], references: [id])
+
+  creatorId       String
+  creator         UGCCreator    @relation(fields: [creatorId], references: [id])
+
+  // Video
+  tiktokUrl       String?
+  s3Url           String?       // backup copy
+
+  // Payment
+  amountPaid      Float?
+  paidAt          DateTime?
+
+  // Performance (manually updated weekly)
+  viewCount       Int           @default(0)
+  likeCount       Int           @default(0)
+  shareCount      Int           @default(0)
+  commentCount    Int           @default(0)
+  saveCount       Int           @default(0)   // TikTok saves — #1 algorithm signal for edu content
+  linkClicks      Int           @default(0)   // tracked via UTM
+  leadsAttributed Int           @default(0)   // manually attributed
+
+  performanceScore Float?       // computed: saves-weighted formula normalized to 0-100
+
+  status          VideoStatus   @default(RECEIVED)
+  notes           String?
+
+  @@index([creatorId])
+  @@index([briefId])
+  @@index([performanceScore])
+}
+
+enum VideoStatus {
+  RECEIVED     // creator submitted
+  APPROVED     // reviewed and approved to post
+  REJECTED     // sent back for revision
+  POSTED       // live on TikTok
+  TRACKING     // posted and we're tracking metrics
+}
+
+// ============================================
+// YouTube Content Pipeline (Episodes)
+// ============================================
+
+enum EpisodeFormat {
+  SHORT     // 30-60 seconds, 4-8 shots
+  EPISODE   // 3-5 minutes, 15-30 shots
+}
+
+enum EpisodeStatus {
+  DRAFT
+  SCRIPTING
+  STORYBOARDING
+  ART
+  VOICE
+  VIDEO
+  ASSEMBLING
+  REVIEW
+  PUBLISHED
+}
+
+enum AssetStatus {
+  PENDING
+  ASSET_GENERATING
+  COMPLETE
+  ASSET_FAILED
+}
+
+model Episode {
+  id              String          @id @default(cuid())
+  title           String
+  slug            String          @unique
+  format          EpisodeFormat
+  status          EpisodeStatus   @default(DRAFT)
+
+  // Curriculum source
+  moduleCode      String
+  lessonNumber    Int
+  chunkIds        String[]        // IDs of curriculum chunks used as source
+
+  // Series grouping
+  series          String          @default("how-pieces-move")
+  seriesOrder     Int             @default(0)
+
+  // Generated content
+  script          Json?           // Full script document from Claude
+
+  // Relations
+  shots           Shot[]
+
+  // Final output
+  finalVideoUrl   String?
+  finalVideoKey   String?
+  finalDuration   Int?            // seconds
+  thumbnailUrl    String?
+  thumbnailKey    String?
+
+  // Publishing
+  youtubeId       String?
+  publishedAt     DateTime?
+
+  // Metadata
+  createdBy       String          // user email
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([series, seriesOrder])
+  @@index([moduleCode, lessonNumber])
+  @@index([status])
+  @@index([createdBy])
+}
+
+model Shot {
+  id              String          @id @default(cuid())
+  episodeId       String
+  episode         Episode         @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+  orderIndex      Int             // 0, 1, 2...
+
+  // Storyboard
+  sceneDescription String
+  characters      String[]
+  cameraAngle     String?
+
+  // Dialogue & narration
+  narration       String?
+  dialogueLines   Json?           // [{ character, line, emotion }]
+
+  // Generated assets (each stage fills these in)
+  imageUrl        String?
+  imageKey        String?
+  imageStatus     AssetStatus     @default(PENDING)
+
+  audioUrl        String?
+  audioKey        String?
+  audioStatus     AssetStatus     @default(PENDING)
+  audioDuration   Float?          // seconds
+
+  videoUrl        String?
+  videoKey        String?
+  videoStatus     AssetStatus     @default(PENDING)
+  videoDuration   Float?          // seconds
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([episodeId, orderIndex])
+}

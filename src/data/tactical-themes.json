@@ -1,0 +1,142 @@
+[
+  {
+    "id": "fork",
+    "name": "Fork",
+    "description": "Attack two or more pieces simultaneously with a single piece",
+    "examples": ["Knight fork on king and queen", "Pawn fork", "Queen fork"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "pin",
+    "name": "Pin",
+    "description": "Immobilize a piece that cannot move without exposing a more valuable piece behind it",
+    "examples": ["Absolute pin (to king)", "Relative pin (to queen)", "Bishop pin"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "skewer",
+    "name": "Skewer",
+    "description": "Attack a valuable piece that must move, exposing a piece behind it to capture",
+    "examples": ["King and queen skewer", "Rook skewer on back rank"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "discovered-attack",
+    "name": "Discovered Attack",
+    "description": "Move one piece to reveal an attack by another piece behind it",
+    "examples": ["Discovered check", "Discovered attack on queen"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "double-check",
+    "name": "Double Check",
+    "description": "Check the king with two pieces simultaneously - king must move",
+    "examples": ["Knight + bishop double check", "Rook + bishop double check"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "back-rank",
+    "name": "Back Rank Mate",
+    "description": "Checkmate the king trapped on the back rank by its own pawns",
+    "examples": ["Rook mate on back rank", "Queen mate on back rank"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "deflection",
+    "name": "Deflection",
+    "description": "Force a defending piece away from its protective duty",
+    "examples": ["Deflect the queen from defending mate", "Deflect rook from back rank"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "decoy",
+    "name": "Decoy",
+    "description": "Lure an enemy piece to a specific square where it can be exploited",
+    "examples": ["Decoy king into fork", "Decoy queen to pin"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "interference",
+    "name": "Interference",
+    "description": "Block the line of communication between enemy pieces",
+    "examples": ["Block defense of back rank", "Interference between queen and rook"],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "x-ray",
+    "name": "X-Ray Attack",
+    "description": "Attack or defend through an enemy piece",
+    "examples": ["X-ray defense of back rank", "X-ray attack on queen"],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "windmill",
+    "name": "Windmill",
+    "description": "Repeated discovered checks allowing multiple captures",
+    "examples": ["Torre vs Lasker windmill", "Bishop + rook windmill"],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "zugzwang",
+    "name": "Zugzwang",
+    "description": "Position where any move a player makes weakens their position",
+    "examples": ["King and pawn endgame zugzwang", "Mutual zugzwang"],
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trapped-piece",
+    "name": "Trapped Piece",
+    "description": "Win a piece that has no safe squares to escape to",
+    "examples": ["Trapped bishop", "Trapped knight on rim", "Trapped queen"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "overloading",
+    "name": "Overloading",
+    "description": "Exploit a piece that has too many defensive duties",
+    "examples": ["Overloaded queen", "Overloaded defender"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "clearance",
+    "name": "Clearance Sacrifice",
+    "description": "Sacrifice a piece to clear a square, file, or diagonal for another piece",
+    "examples": ["Clear square for queen", "Clear file for rook"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "desperado",
+    "name": "Desperado",
+    "description": "A doomed piece captures as much material as possible before being taken",
+    "examples": ["Desperado knight takes", "Mutual desperado"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "zwischenzug",
+    "name": "Zwischenzug (Intermezzo)",
+    "description": "An unexpected intermediate move inserted before the expected response",
+    "examples": ["Check before recapture", "Threat before trade"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "removing-defender",
+    "name": "Removing the Defender",
+    "description": "Capture or deflect the piece that protects a target",
+    "examples": ["Capture the defending knight", "Exchange the key defender"],
+    "difficulty": "beginner"
+  },
+  {
+    "id": "attraction",
+    "name": "Attraction",
+    "description": "Force the king or key piece to a dangerous square",
+    "examples": ["Attract king to fork square", "Sacrifice to attract"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "battery",
+    "name": "Battery",
+    "description": "Line up two pieces on the same file, rank, or diagonal for combined power",
+    "examples": ["Queen and bishop battery", "Doubled rooks battery"],
+    "difficulty": "beginner"
+  }
+]

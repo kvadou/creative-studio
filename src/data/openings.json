@@ -1,0 +1,320 @@
+[
+  {
+    "eco": "A00",
+    "name": "Uncommon Openings",
+    "moves": "Various",
+    "description": "Irregular first moves like 1.g4, 1.b4, 1.f4"
+  },
+  {
+    "eco": "A04",
+    "name": "Reti Opening",
+    "moves": "1.Nf3",
+    "description": "Hypermodern opening delaying central pawn moves"
+  },
+  {
+    "eco": "A10",
+    "name": "English Opening",
+    "moves": "1.c4",
+    "description": "Flexible flank opening controlling d5"
+  },
+  {
+    "eco": "A40",
+    "name": "Queen's Pawn Game",
+    "moves": "1.d4",
+    "description": "Classical opening leading to many systems"
+  },
+  {
+    "eco": "A45",
+    "name": "Trompowsky Attack",
+    "moves": "1.d4 Nf6 2.Bg5",
+    "description": "Aggressive bishop development avoiding mainlines"
+  },
+  {
+    "eco": "A80",
+    "name": "Dutch Defense",
+    "moves": "1.d4 f5",
+    "description": "Aggressive defense aiming for kingside attack"
+  },
+  {
+    "eco": "B00",
+    "name": "King's Pawn Openings",
+    "moves": "1.e4",
+    "description": "Most popular first move in chess"
+  },
+  {
+    "eco": "B01",
+    "name": "Scandinavian Defense",
+    "moves": "1.e4 d5",
+    "description": "Immediate challenge to White's e4 pawn"
+  },
+  {
+    "eco": "B02",
+    "name": "Alekhine Defense",
+    "moves": "1.e4 Nf6",
+    "description": "Hypermodern defense inviting pawn advances"
+  },
+  {
+    "eco": "B06",
+    "name": "Modern Defense",
+    "moves": "1.e4 g6",
+    "description": "Flexible fianchetto setup"
+  },
+  {
+    "eco": "B07",
+    "name": "Pirc Defense",
+    "moves": "1.e4 d6 2.d4 Nf6",
+    "description": "Solid hypermodern defense"
+  },
+  {
+    "eco": "B10",
+    "name": "Caro-Kann Defense",
+    "moves": "1.e4 c6",
+    "description": "Solid defense supporting ...d5"
+  },
+  {
+    "eco": "B20",
+    "name": "Sicilian Defense",
+    "moves": "1.e4 c5",
+    "description": "Most popular and complex defense to 1.e4"
+  },
+  {
+    "eco": "B21",
+    "name": "Sicilian, Smith-Morra Gambit",
+    "moves": "1.e4 c5 2.d4 cxd4 3.c3",
+    "description": "Aggressive gambit for rapid development"
+  },
+  {
+    "eco": "B27",
+    "name": "Sicilian, Accelerated Dragon",
+    "moves": "1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 g6",
+    "description": "Dragon setup without ...d6"
+  },
+  {
+    "eco": "B30",
+    "name": "Sicilian, Rossolimo",
+    "moves": "1.e4 c5 2.Nf3 Nc6 3.Bb5",
+    "description": "Anti-Sicilian with early bishop sortie"
+  },
+  {
+    "eco": "B50",
+    "name": "Sicilian Defense",
+    "moves": "1.e4 c5 2.Nf3 d6",
+    "description": "Main line Sicilian systems"
+  },
+  {
+    "eco": "B60",
+    "name": "Sicilian, Dragon Variation",
+    "moves": "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6",
+    "description": "Aggressive fianchetto setup in Sicilian"
+  },
+  {
+    "eco": "B80",
+    "name": "Sicilian, Scheveningen",
+    "moves": "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 e6",
+    "description": "Flexible pawn structure with ...e6"
+  },
+  {
+    "eco": "B90",
+    "name": "Sicilian, Najdorf",
+    "moves": "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6",
+    "description": "Most popular Sicilian, extremely flexible"
+  },
+  {
+    "eco": "C00",
+    "name": "French Defense",
+    "moves": "1.e4 e6",
+    "description": "Solid defense leading to strategic battles"
+  },
+  {
+    "eco": "C20",
+    "name": "King's Pawn Game",
+    "moves": "1.e4 e5",
+    "description": "Classical response to 1.e4"
+  },
+  {
+    "eco": "C21",
+    "name": "Danish Gambit",
+    "moves": "1.e4 e5 2.d4 exd4 3.c3",
+    "description": "Aggressive gambit sacrificing two pawns"
+  },
+  {
+    "eco": "C25",
+    "name": "Vienna Game",
+    "moves": "1.e4 e5 2.Nc3",
+    "description": "Flexible opening supporting f4"
+  },
+  {
+    "eco": "C30",
+    "name": "King's Gambit",
+    "moves": "1.e4 e5 2.f4",
+    "description": "Romantic era gambit sacrificing f-pawn"
+  },
+  {
+    "eco": "C40",
+    "name": "Latvian Gambit",
+    "moves": "1.e4 e5 2.Nf3 f5",
+    "description": "Risky counter-gambit"
+  },
+  {
+    "eco": "C41",
+    "name": "Philidor Defense",
+    "moves": "1.e4 e5 2.Nf3 d6",
+    "description": "Solid but passive defense"
+  },
+  {
+    "eco": "C42",
+    "name": "Petrov Defense",
+    "moves": "1.e4 e5 2.Nf3 Nf6",
+    "description": "Symmetrical and solid defense"
+  },
+  {
+    "eco": "C44",
+    "name": "Scotch Game",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.d4",
+    "description": "Direct central challenge"
+  },
+  {
+    "eco": "C45",
+    "name": "Scotch Game",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4",
+    "description": "Main line Scotch positions"
+  },
+  {
+    "eco": "C50",
+    "name": "Italian Game",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4",
+    "description": "Classical opening targeting f7"
+  },
+  {
+    "eco": "C51",
+    "name": "Evans Gambit",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.b4",
+    "description": "Romantic era gambit for rapid attack"
+  },
+  {
+    "eco": "C54",
+    "name": "Italian, Giuoco Piano",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5",
+    "description": "Classical Italian with symmetrical development"
+  },
+  {
+    "eco": "C55",
+    "name": "Two Knights Defense",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6",
+    "description": "Active defense inviting complications"
+  },
+  {
+    "eco": "C60",
+    "name": "Ruy Lopez",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5",
+    "description": "The Spanish Game - most respected opening"
+  },
+  {
+    "eco": "C65",
+    "name": "Ruy Lopez, Berlin Defense",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5 Nf6",
+    "description": "Solid defense leading to endgames"
+  },
+  {
+    "eco": "C70",
+    "name": "Ruy Lopez, Morphy Defense",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6",
+    "description": "Main line Spanish positions"
+  },
+  {
+    "eco": "C80",
+    "name": "Ruy Lopez, Open Variation",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Nxe4",
+    "description": "Sharp tactical variation"
+  },
+  {
+    "eco": "C88",
+    "name": "Ruy Lopez, Closed Variation",
+    "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7",
+    "description": "Strategic main line Spanish"
+  },
+  {
+    "eco": "D00",
+    "name": "Queen's Pawn Game",
+    "moves": "1.d4 d5",
+    "description": "Classical response to 1.d4"
+  },
+  {
+    "eco": "D02",
+    "name": "London System",
+    "moves": "1.d4 d5 2.Nf3 Nf6 3.Bf4",
+    "description": "Solid system with early bishop development"
+  },
+  {
+    "eco": "D06",
+    "name": "Queen's Gambit",
+    "moves": "1.d4 d5 2.c4",
+    "description": "Classical gambit offering c-pawn"
+  },
+  {
+    "eco": "D10",
+    "name": "Slav Defense",
+    "moves": "1.d4 d5 2.c4 c6",
+    "description": "Solid defense protecting d5 with c6"
+  },
+  {
+    "eco": "D30",
+    "name": "Queen's Gambit Declined",
+    "moves": "1.d4 d5 2.c4 e6",
+    "description": "Classical solid defense"
+  },
+  {
+    "eco": "D35",
+    "name": "QGD, Exchange Variation",
+    "moves": "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.cxd5",
+    "description": "Symmetrical pawn structure"
+  },
+  {
+    "eco": "D37",
+    "name": "QGD, Classical Variation",
+    "moves": "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Nf3",
+    "description": "Main line QGD positions"
+  },
+  {
+    "eco": "D70",
+    "name": "Grunfeld Defense",
+    "moves": "1.d4 Nf6 2.c4 g6 3.Nc3 d5",
+    "description": "Hypermodern challenge to White's center"
+  },
+  {
+    "eco": "E00",
+    "name": "Indian Defenses",
+    "moves": "1.d4 Nf6",
+    "description": "Flexible knight development"
+  },
+  {
+    "eco": "E12",
+    "name": "Queen's Indian Defense",
+    "moves": "1.d4 Nf6 2.c4 e6 3.Nf3 b6",
+    "description": "Solid fianchetto defense"
+  },
+  {
+    "eco": "E20",
+    "name": "Nimzo-Indian Defense",
+    "moves": "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4",
+    "description": "Aggressive pin on c3 knight"
+  },
+  {
+    "eco": "E60",
+    "name": "King's Indian Defense",
+    "moves": "1.d4 Nf6 2.c4 g6",
+    "description": "Dynamic defense with kingside attack potential"
+  },
+  {
+    "eco": "E70",
+    "name": "King's Indian, Classical",
+    "moves": "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.Nf3",
+    "description": "Main line King's Indian"
+  },
+  {
+    "eco": "E80",
+    "name": "King's Indian, Samisch",
+    "moves": "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.f3",
+    "description": "Aggressive setup against King's Indian"
+  }
+]

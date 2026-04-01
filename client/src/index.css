@@ -1,0 +1,624 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles - Brand */
+html {
+  /* Prevent text size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  /* Safe area padding for notched devices */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+}
+
+body {
+  @apply bg-stc-bg text-neutral-900 antialiased;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  /* Prevent overscroll bounce on iOS */
+  overscroll-behavior: none;
+  /* Improve touch scrolling */
+  -webkit-overflow-scrolling: touch;
+  /* Prevent pull-to-refresh on mobile */
+  overscroll-behavior-y: contain;
+}
+
+/* Prevent text selection on interactive elements */
+button, a, .no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow text selection in content areas */
+.prose, .selectable {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-stc-purple-50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-stc-purple-200 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-stc-purple-300;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #6A469D;
+}
+
+/* Design System Colors as CSS Variables */
+:root {
+  --stc-purple-50: #F5F3F8;
+  --stc-purple-100: #E8E3F0;
+  --stc-purple-200: #D1C7E1;
+  --stc-purple-300: #B4A3CC;
+  --stc-purple-400: #967FB7;
+  --stc-purple-500: #6A469D;
+  --stc-purple-600: #5A3B85;
+  --stc-purple-700: #4A306D;
+  --stc-purple-800: #3A2555;
+  --stc-purple-900: #2A1A3D;
+  --stc-bg: #E8FBFF;
+  --stc-blue: #50C8DF;
+  --stc-green: #34B256;
+  --stc-yellow: #FACC29;
+  --stc-orange: #F79A30;
+  --stc-pink: #DA2E72;
+  --stc-navy: #2D2F8E;
+}
+
+/* Component Styles */
+
+/* Primary button */
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 px-5 py-2
+         text-white font-semibold rounded-xl
+         transition-all duration-200
+         disabled:opacity-40 disabled:cursor-not-allowed
+         shadow-card hover:shadow-card-hover
+         active:scale-[0.98];
+  background: var(--stc-purple-500);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--stc-purple-600);
+}
+.btn-primary:disabled {
+  background: var(--stc-purple-300);
+}
+
+/* Secondary/ghost button */
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2
+         bg-white text-stc-purple-600 font-medium rounded-xl
+         border-2 border-stc-purple-100
+         hover:bg-stc-purple-50 hover:border-stc-purple-200
+         transition-all duration-200
+         active:scale-[0.98];
+}
+
+/* Link button */
+.btn-link {
+  @apply font-medium transition-colors duration-200;
+  color: var(--stc-purple-500);
+}
+.btn-link:hover {
+  color: var(--stc-purple-700);
+}
+
+/* Card */
+.card {
+  @apply bg-white rounded-2xl shadow-card;
+}
+
+/* Card with colored left border */
+.card-accent-purple {
+  @apply bg-white rounded-2xl shadow-card border-l-4;
+  border-left-color: var(--stc-purple-500);
+}
+
+.card-accent-blue {
+  @apply bg-white rounded-2xl shadow-card border-l-4;
+  border-left-color: var(--stc-blue);
+}
+
+.card-accent-green {
+  @apply bg-white rounded-2xl shadow-card border-l-4;
+  border-left-color: var(--stc-green);
+}
+
+.card-accent-orange {
+  @apply bg-white rounded-2xl shadow-card border-l-4;
+  border-left-color: var(--stc-orange);
+}
+
+/* Input */
+.input {
+  @apply w-full px-4 py-3
+         bg-stc-purple-50 border-2 border-stc-purple-100 rounded-xl
+         text-neutral-900 placeholder-neutral-400
+         transition-all duration-200
+         text-base;
+}
+.input:focus {
+  @apply bg-white;
+  border-color: var(--stc-purple-500);
+  box-shadow: 0 0 0 4px rgba(106, 70, 157, 0.15);
+  outline: none;
+}
+
+/* Badge styles */
+.badge {
+  @apply inline-flex items-center px-3 py-1
+         text-xs font-semibold rounded-full;
+}
+
+.badge-green {
+  background-color: rgba(52, 178, 86, 0.1);
+  color: var(--stc-green);
+  border: 1px solid rgba(52, 178, 86, 0.2);
+}
+
+.badge-yellow {
+  background-color: rgba(250, 204, 41, 0.15);
+  color: #B8860B;
+  border: 1px solid rgba(250, 204, 41, 0.3);
+}
+
+.badge-orange {
+  background-color: rgba(247, 154, 48, 0.1);
+  color: #C97607;
+  border: 1px solid rgba(247, 154, 48, 0.2);
+}
+
+.badge-blue {
+  background-color: rgba(80, 200, 223, 0.1);
+  color: #0891B2;
+  border: 1px solid rgba(80, 200, 223, 0.2);
+}
+
+.badge-purple {
+  background-color: var(--stc-purple-50);
+  color: var(--stc-purple-600);
+  border: 1px solid var(--stc-purple-200);
+}
+
+.badge-gray {
+  @apply bg-neutral-100 text-neutral-600 border border-neutral-200;
+}
+
+/* Pill badge */
+.pill {
+  @apply inline-flex items-center px-3 py-1
+         text-xs font-semibold rounded-full text-white;
+}
+
+.pill-purple {
+  background: linear-gradient(135deg, var(--stc-purple-500) 0%, var(--stc-purple-600) 100%);
+}
+
+.pill-blue {
+  background: linear-gradient(135deg, var(--stc-blue) 0%, #3BA8C0 100%);
+}
+
+.pill-green {
+  background: linear-gradient(135deg, var(--stc-green) 0%, #2A9147 100%);
+}
+
+/* Markdown/prose styling */
+.prose pre {
+  @apply bg-neutral-800 text-neutral-100 rounded-xl p-4 overflow-x-auto text-sm;
+}
+
+.prose code {
+  @apply bg-stc-purple-50 px-2 py-1 rounded-lg text-sm font-medium;
+  color: var(--stc-purple-600);
+}
+
+.prose pre code {
+  @apply bg-transparent text-neutral-100 p-0;
+}
+
+.prose ul {
+  @apply list-disc list-inside space-y-1.5 text-neutral-600;
+}
+
+.prose ol {
+  @apply list-decimal list-inside space-y-1.5 text-neutral-600;
+}
+
+.prose h3, .prose h2 {
+  @apply font-semibold text-neutral-900 mt-4 mb-2;
+}
+
+.prose strong {
+  @apply font-semibold text-neutral-900;
+}
+
+.prose p {
+  @apply text-neutral-600 leading-relaxed;
+}
+
+/* Loading animation */
+.loading-dot {
+  @apply w-2.5 h-2.5 rounded-full;
+  background-color: var(--stc-purple-400);
+  animation: bounce-dot 1.4s ease-in-out infinite both;
+}
+
+.loading-dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dot:nth-child(2) { animation-delay: -0.16s; }
+.loading-dot:nth-child(3) { animation-delay: 0s; }
+
+@keyframes bounce-dot {
+  0%, 80%, 100% {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Message slide-in animation */
+.message-enter {
+  animation: slide-up 0.25s ease-out forwards;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in animation */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Subtle pattern background */
+.pattern-bg {
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(106, 70, 157, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(80, 200, 223, 0.03) 0%, transparent 50%);
+}
+
+/* ============================================
+   MOBILE-FIRST RESPONSIVE IMPROVEMENTS
+   ============================================ */
+
+/* Safe area utilities */
+.safe-top {
+  padding-top: var(--safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.safe-left {
+  padding-left: var(--safe-area-inset-left);
+}
+
+.safe-right {
+  padding-right: var(--safe-area-inset-right);
+}
+
+.safe-x {
+  padding-left: var(--safe-area-inset-left);
+  padding-right: var(--safe-area-inset-right);
+}
+
+.safe-y {
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+/* Touch-friendly improvements */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Active states for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .touch-active:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+
+  /* Better touch feedback for buttons */
+  .btn-primary:active {
+    transform: scale(0.97);
+  }
+
+  .btn-secondary:active {
+    transform: scale(0.97);
+  }
+
+  /* Hide scrollbars on touch devices for cleaner look */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-stc-purple-300;
+  }
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive typography scale */
+@layer utilities {
+  .text-responsive-xs {
+    @apply text-xs;
+  }
+
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl md:text-2xl;
+  }
+
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+
+  .text-responsive-2xl {
+    @apply text-2xl sm:text-3xl md:text-4xl;
+  }
+}
+
+/* Input improvements for mobile */
+.input-mobile {
+  @apply text-base; /* Prevents iOS zoom on focus */
+  font-size: 16px !important; /* Force 16px to prevent zoom */
+}
+
+/* Better textarea for mobile */
+.textarea-auto {
+  resize: none;
+  overflow: hidden;
+  min-height: 52px;
+  max-height: 200px;
+  field-sizing: content; /* Modern browsers auto-resize */
+}
+
+/* Landscape mode adjustments */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .landscape-compact {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .landscape-hide {
+    display: none !important;
+  }
+}
+
+/* Keyboard visible adjustments */
+@supports (height: 100dvh) {
+  .h-screen-dynamic {
+    height: 100dvh;
+  }
+}
+
+/* Pull-down visual indicator (prepared for pull-to-refresh) */
+.pull-indicator {
+  @apply flex items-center justify-center h-12 -mt-12 text-stc-purple-400;
+  transition: transform 0.2s ease-out;
+}
+
+.pull-indicator.pulling {
+  transform: translateY(100%);
+}
+
+/* Skeleton loading for mobile */
+.skeleton {
+  @apply bg-neutral-200 rounded animate-pulse;
+}
+
+.skeleton-text {
+  @apply h-4 bg-neutral-200 rounded animate-pulse;
+}
+
+.skeleton-text-sm {
+  @apply h-3 bg-neutral-200 rounded animate-pulse;
+}
+
+/* Improved loading states */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(106, 70, 157, 0.05) 0%,
+    rgba(106, 70, 157, 0.1) 50%,
+    rgba(106, 70, 157, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Bottom sheet style for mobile modals */
+@media (max-width: 767px) {
+  .mobile-sheet {
+    @apply fixed inset-x-0 bottom-0 rounded-t-3xl;
+    max-height: 85vh;
+    padding-bottom: var(--safe-area-inset-bottom);
+  }
+
+  .mobile-sheet-handle {
+    @apply w-12 h-1.5 bg-neutral-300 rounded-full mx-auto mt-3 mb-4;
+  }
+}
+
+/* Swipe gesture hint */
+.swipe-hint {
+  @apply relative overflow-hidden;
+}
+
+.swipe-hint::after {
+  content: '';
+  @apply absolute inset-y-0 right-0 w-8 pointer-events-none;
+  background: linear-gradient(to left, var(--stc-purple-50), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.swipe-hint:hover::after,
+.swipe-hint:focus-within::after {
+  opacity: 1;
+}
+
+/* Conversation item hover states */
+.conversation-item {
+  @apply relative transition-all duration-200;
+}
+
+.conversation-item::before {
+  content: '';
+  @apply absolute inset-0 rounded-xl bg-stc-purple-500 opacity-0 scale-95 transition-all duration-200;
+  z-index: -1;
+}
+
+.conversation-item:hover::before {
+  @apply opacity-5 scale-100;
+}
+
+.conversation-item.active::before {
+  @apply opacity-10 scale-100;
+}
+
+/* Message bubbles with better mobile sizing */
+@media (max-width: 640px) {
+  .message-bubble {
+    max-width: 92%;
+  }
+
+  .message-bubble .prose {
+    @apply text-[15px] leading-relaxed;
+  }
+}
+
+/* Floating action button style */
+.fab {
+  @apply fixed z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center;
+  @apply bg-stc-purple-500 text-white;
+  right: 1rem;
+  bottom: calc(1rem + var(--safe-area-inset-bottom));
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.fab:hover {
+  @apply shadow-xl;
+  transform: scale(1.05);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+/* Better focus visible for keyboard navigation */
+.focus-ring {
+  @apply outline-none;
+}
+
+.focus-ring:focus-visible {
+  @apply ring-2 ring-stc-purple-500 ring-offset-2;
+}
+
+/* Hide on mobile, show on desktop (and vice versa) */
+.mobile-only {
+  @apply block md:hidden;
+}
+
+.desktop-only {
+  @apply hidden md:block;
+}
+
+/* Responsive padding utilities */
+@layer utilities {
+  .px-safe {
+    padding-left: max(1rem, var(--safe-area-inset-left));
+    padding-right: max(1rem, var(--safe-area-inset-right));
+  }
+
+  .py-safe {
+    padding-top: max(1rem, var(--safe-area-inset-top));
+    padding-bottom: max(1rem, var(--safe-area-inset-bottom));
+  }
+}

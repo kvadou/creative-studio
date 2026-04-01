@@ -1,0 +1,322 @@
+[
+  {
+    "id": "my-system",
+    "title": "My System",
+    "author": "Aron Nimzowitsch",
+    "year": 1925,
+    "concepts": ["prophylaxis", "blockade", "overprotection", "positional play"],
+    "description": "Foundation of positional chess understanding, introducing concepts like prophylaxis and blockade"
+  },
+  {
+    "id": "art-of-attack",
+    "title": "The Art of Attack in Chess",
+    "author": "Vladimir Vukovic",
+    "year": 1965,
+    "concepts": ["attacking chess", "king safety", "sacrifices", "mating patterns"],
+    "description": "Comprehensive guide to attacking the castled and uncastled king"
+  },
+  {
+    "id": "bobby-fischer-teaches-chess",
+    "title": "Bobby Fischer Teaches Chess",
+    "author": "Bobby Fischer",
+    "year": 1966,
+    "concepts": ["tactics", "checkmate patterns", "back rank mate"],
+    "description": "Programmed learning approach to basic tactics and checkmate patterns"
+  },
+  {
+    "id": "logical-chess",
+    "title": "Logical Chess: Move By Move",
+    "author": "Irving Chernev",
+    "year": 1957,
+    "concepts": ["game analysis", "opening principles", "middlegame strategy"],
+    "description": "33 complete games explained move by move for beginners"
+  },
+  {
+    "id": "life-games-tal",
+    "title": "The Life and Games of Mikhail Tal",
+    "author": "Mikhail Tal",
+    "year": 1976,
+    "concepts": ["sacrifices", "attacking chess", "intuition", "complications"],
+    "description": "Autobiography with deeply annotated games from the Magician from Riga"
+  },
+  {
+    "id": "silmans-endgame",
+    "title": "Silman's Complete Endgame Course",
+    "author": "Jeremy Silman",
+    "year": 2007,
+    "concepts": ["endgames", "king and pawn", "rook endgames", "minor piece endgames"],
+    "description": "Endgame knowledge organized by rating level"
+  },
+  {
+    "id": "reassess-your-chess",
+    "title": "How to Reassess Your Chess",
+    "author": "Jeremy Silman",
+    "year": 1993,
+    "concepts": ["imbalances", "planning", "positional chess", "piece activity"],
+    "description": "Understanding chess through the concept of imbalances"
+  },
+  {
+    "id": "100-endgames",
+    "title": "100 Endgames You Must Know",
+    "author": "Jesus de la Villa",
+    "year": 2008,
+    "concepts": ["practical endgames", "theoretical positions", "technique"],
+    "description": "Essential endgame knowledge for practical players"
+  },
+  {
+    "id": "dvoretsky-endgame",
+    "title": "Dvoretsky's Endgame Manual",
+    "author": "Mark Dvoretsky",
+    "year": 2003,
+    "concepts": ["advanced endgames", "technique", "theoretical positions"],
+    "description": "The definitive advanced endgame reference"
+  },
+  {
+    "id": "zurich-1953",
+    "title": "Zurich 1953",
+    "author": "David Bronstein",
+    "year": 1979,
+    "concepts": ["tournament chess", "strategy", "game analysis"],
+    "description": "One of the greatest tournament books ever written"
+  },
+  {
+    "id": "think-like-grandmaster",
+    "title": "Think Like a Grandmaster",
+    "author": "Alexander Kotov",
+    "year": 1971,
+    "concepts": ["calculation", "candidate moves", "analysis tree"],
+    "description": "Systematic approach to calculation and decision-making"
+  },
+  {
+    "id": "chess-fundamentals",
+    "title": "Chess Fundamentals",
+    "author": "Jose Raul Capablanca",
+    "year": 1921,
+    "concepts": ["basics", "endgames", "simple positions", "technique"],
+    "description": "Timeless classic on chess basics from a world champion"
+  },
+  {
+    "id": "best-lessons-amateur",
+    "title": "The Best Lessons of a Chess Coach",
+    "author": "Sunil Weeramantry",
+    "year": 1993,
+    "concepts": ["teaching chess", "fundamentals", "beginner lessons"],
+    "description": "Practical lessons for teaching and learning chess"
+  },
+  {
+    "id": "pawn-structure",
+    "title": "Pawn Structure Chess",
+    "author": "Andrew Soltis",
+    "year": 1976,
+    "concepts": ["pawn structures", "planning", "typical plans"],
+    "description": "Understanding how pawn structure dictates plans"
+  },
+  {
+    "id": "secrets-modern-chess",
+    "title": "Secrets of Modern Chess Strategy",
+    "author": "John Watson",
+    "year": 1998,
+    "concepts": ["modern chess", "rule-breaking", "dynamic play"],
+    "description": "How modern grandmasters have evolved strategic thinking"
+  },
+  {
+    "id": "school-of-chess-excellence",
+    "title": "School of Chess Excellence",
+    "author": "Mark Dvoretsky",
+    "year": 2001,
+    "concepts": ["training", "analysis", "improvement"],
+    "description": "Training methods from the legendary chess trainer"
+  },
+  {
+    "id": "understanding-chess-middlegames",
+    "title": "Understanding Chess Middlegames",
+    "author": "John Nunn",
+    "year": 2011,
+    "concepts": ["middlegame", "typical positions", "strategic themes"],
+    "description": "100 essential middlegame themes explained"
+  },
+  {
+    "id": "most-instructive-games",
+    "title": "The Most Instructive Games of Chess Ever Played",
+    "author": "Irving Chernev",
+    "year": 1965,
+    "concepts": ["strategy", "classics", "instructive games"],
+    "description": "62 masterpieces of chess strategy"
+  },
+  {
+    "id": "fire-on-board",
+    "title": "Fire on Board",
+    "author": "Alexei Shirov",
+    "year": 1997,
+    "concepts": ["attacking chess", "sacrifices", "creativity"],
+    "description": "Spectacular attacking games from a modern master"
+  },
+  {
+    "id": "positional-decision-making",
+    "title": "Positional Decision Making in Chess",
+    "author": "Boris Gelfand",
+    "year": 2015,
+    "concepts": ["decision making", "positional chess", "grandmaster thinking"],
+    "description": "How a world-class GM approaches positional decisions"
+  },
+  {
+    "id": "chess-praxis",
+    "title": "Chess Praxis",
+    "author": "Aron Nimzowitsch",
+    "year": 1929,
+    "concepts": ["prophylaxis", "blockade", "games collection"],
+    "description": "Nimzowitsch's own games demonstrating his theories"
+  },
+  {
+    "id": "amateur-mind",
+    "title": "The Amateur's Mind",
+    "author": "Jeremy Silman",
+    "year": 1995,
+    "concepts": ["common mistakes", "thinking process", "improvement"],
+    "description": "Turning chess mistakes into chess mastery"
+  },
+  {
+    "id": "imagination-in-chess",
+    "title": "Imagination in Chess",
+    "author": "Paata Gaprindashvili",
+    "year": 2004,
+    "concepts": ["creativity", "unusual moves", "imagination"],
+    "description": "Training your chess imagination with puzzles"
+  },
+  {
+    "id": "seven-deadly-sins",
+    "title": "The Seven Deadly Chess Sins",
+    "author": "Jonathan Rowson",
+    "year": 2000,
+    "concepts": ["psychology", "mistakes", "improvement"],
+    "description": "Psychological pitfalls and how to avoid them"
+  },
+  {
+    "id": "pump-up-your-rating",
+    "title": "Pump Up Your Rating",
+    "author": "Axel Smith",
+    "year": 2013,
+    "concepts": ["improvement", "training", "practical play"],
+    "description": "Practical advice for improving your chess"
+  },
+  {
+    "id": "chess-structures",
+    "title": "Chess Structures: A Grandmaster Guide",
+    "author": "Mauricio Flores Rios",
+    "year": 2015,
+    "concepts": ["pawn structures", "typical plans", "strategy"],
+    "description": "Modern guide to pawn structures and plans"
+  },
+  {
+    "id": "attack-defense",
+    "title": "Attack and Defense",
+    "author": "Mark Dvoretsky",
+    "year": 1998,
+    "concepts": ["attack", "defense", "calculation"],
+    "description": "Mastering the art of attack and defense"
+  },
+  {
+    "id": "winning-chess-strategies",
+    "title": "Winning Chess Strategies",
+    "author": "Yasser Seirawan",
+    "year": 2003,
+    "concepts": ["strategy", "planning", "positional play"],
+    "description": "Accessible guide to chess strategy"
+  },
+  {
+    "id": "winning-chess-tactics",
+    "title": "Winning Chess Tactics",
+    "author": "Yasser Seirawan",
+    "year": 2003,
+    "concepts": ["tactics", "combinations", "patterns"],
+    "description": "Comprehensive introduction to chess tactics"
+  },
+  {
+    "id": "mastering-chess-strategy",
+    "title": "Mastering Chess Strategy",
+    "author": "Johan Hellsten",
+    "year": 2010,
+    "concepts": ["strategy", "planning", "piece coordination"],
+    "description": "Deep dive into strategic chess concepts"
+  },
+  {
+    "id": "prophylaxis",
+    "title": "Prophylaxis",
+    "author": "Mark Dvoretsky",
+    "year": 2004,
+    "concepts": ["prophylaxis", "prevention", "anticipation"],
+    "description": "The art of preventing opponent's plans"
+  },
+  {
+    "id": "nimzowitsch-defense",
+    "title": "My Best Games of Chess",
+    "author": "Alexander Alekhine",
+    "year": 1927,
+    "concepts": ["attacking chess", "combinations", "brilliancies"],
+    "description": "Brilliancies from the fourth world champion"
+  },
+  {
+    "id": "test-your-chess-iq",
+    "title": "Test Your Chess IQ",
+    "author": "August Livshitz",
+    "year": 1981,
+    "concepts": ["tactics", "puzzles", "calculation"],
+    "description": "Classic collection of tactical puzzles"
+  },
+  {
+    "id": "chess-tactics-for-kids",
+    "title": "Chess Tactics for Kids",
+    "author": "Murray Chandler",
+    "year": 2004,
+    "concepts": ["tactics for beginners", "basic patterns", "kids chess"],
+    "description": "Tactics made simple for young players"
+  },
+  {
+    "id": "chess-openings-for-kids",
+    "title": "Chess Openings for Kids",
+    "author": "John Watson",
+    "year": 2015,
+    "concepts": ["openings for beginners", "opening principles", "kids chess"],
+    "description": "Introduction to openings for young players"
+  },
+  {
+    "id": "chess-endgames-for-kids",
+    "title": "Chess Endgames for Kids",
+    "author": "Karsten Muller",
+    "year": 2015,
+    "concepts": ["endgames for beginners", "basic endgames", "kids chess"],
+    "description": "Essential endgames for young players"
+  },
+  {
+    "id": "chess-middlegames-for-kids",
+    "title": "Chess Middlegames for Kids",
+    "author": "Karsten Muller",
+    "year": 2019,
+    "concepts": ["middlegame basics", "planning", "kids chess"],
+    "description": "Middlegame concepts for young players"
+  },
+  {
+    "id": "1001-chess-exercises",
+    "title": "1001 Chess Exercises for Beginners",
+    "author": "Franco Masetti",
+    "year": 2012,
+    "concepts": ["exercises", "puzzles", "beginners"],
+    "description": "Large collection of beginner-friendly puzzles"
+  },
+  {
+    "id": "understanding-chess-tactics",
+    "title": "Understanding Chess Tactics",
+    "author": "Martin Weteschnik",
+    "year": 2011,
+    "concepts": ["tactics", "combinations", "patterns"],
+    "description": "Systematic approach to tactical patterns"
+  },
+  {
+    "id": "chess-strategy-for-club-players",
+    "title": "Chess Strategy for Club Players",
+    "author": "Herman Grooten",
+    "year": 2009,
+    "concepts": ["strategy", "planning", "improvement"],
+    "description": "Practical strategy for intermediate players"
+  }
+]

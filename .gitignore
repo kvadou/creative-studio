@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Prisma
+prisma/migrations/migration_lock.toml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cache
+.cache/
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+
+# Media assets (large binary files — stored locally, uploaded to S3/R2 during ingestion)
+media/
+
+# Google OAuth credentials
+google-oauth-credentials.json
+google-token.json
+
+# Claude Code
+.claude/
+
+# Sensitive / generated
+output/
+docs/plans/
+docs/research/
+scripts/
+curriculum/
+training-data/
+media/
+# Root-level image files (not client assets)
+/Logo*.png
+FORDOUG.md
+Procfile
+skills-lock.json
