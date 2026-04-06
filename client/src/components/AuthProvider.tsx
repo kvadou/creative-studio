@@ -23,7 +23,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchUser = async () => {
     setLoading(true);
-    const user = await getCurrentUser();
+    let user = await getCurrentUser();
+
+    // Auto-login as demo user for portfolio demo mode
+    if (!user) {
+      try {
+        const res = await fetch('/api/auth/demo-login', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (res.ok) {
+          user = await getCurrentUser();
+        }
+      } catch {
+        // Fall through — show sign-in page
+      }
+    }
+
     setUser(user);
     setLoading(false);
   };

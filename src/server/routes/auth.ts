@@ -46,6 +46,20 @@ router.get(
   }
 );
 
+// Demo login — portfolio demo mode, no Google auth required
+router.post('/demo-login', (req, res) => {
+  const demoUser: AuthUser = {
+    id: 'demo-user',
+    email: 'demo@acmestudio.com',
+    name: 'Demo User',
+    picture: undefined,
+  };
+
+  const token = signToken(demoUser);
+  res.cookie(COOKIE_NAME, token, COOKIE_OPTIONS);
+  return res.json({ ok: true, user: demoUser });
+});
+
 // Get current user
 router.get('/me', (req, res) => {
   // User is attached by auth middleware if valid

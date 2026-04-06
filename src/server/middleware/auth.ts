@@ -13,6 +13,7 @@ declare module 'express-serve-static-core' {
 const PUBLIC_ROUTES = [
   '/api/auth/google',
   '/api/auth/callback',
+  '/api/auth/demo-login',
   '/api/health',
   '/auth/signin',
   '/auth/unauthorized',
